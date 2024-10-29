@@ -7,6 +7,6 @@ public class RouteToRouteMap extends PropertyMap<Route, Route> {
 
     @Override
     protected void configure() {
-        skip(destination.getRouteId());
+        skip().setRouteId(null);
     }
 }

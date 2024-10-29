@@ -27,7 +27,7 @@ class RouteMapperTest {
         RouteMapper.mapRouteData(source, destination);
 
         // Assert
-        assertThat(destination.getRouteId()).isEqualTo("2");
-        assertThat(destination.getRouteName()).isEqualTo("Source Route");
+        assertThat(destination.getRouteId()).isEqualTo("2"); // Verificar que routeId no cambia
+        assertThat(destination.getRouteName()).isEqualTo("Source Route"); // Verificar que routeName se copia
     }
 }
