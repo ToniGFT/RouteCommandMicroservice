@@ -1,25 +1,12 @@
 package com.workshop.route.domain.model.mapper;
 
 import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.mapper.configuration.ModelMapperConfig;
 import org.modelmapper.ModelMapper;
 
 public class RouteMapper {
 
-    private static final ModelMapper modelMapper = new ModelMapper();
-
-    static {
-        configureMappings();
-    }
-
-    private static void configureMappings() {
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
-
-        modelMapper.typeMap(Route.class, Route.class).addMappings(mapper -> {
-            mapper.skip(Route::setRouteId);
-        });
-    }
+    private static final ModelMapper modelMapper = ModelMapperConfig.getModelMapper();
 
     private RouteMapper() {
     }
