@@ -3,21 +3,41 @@ package com.workshop.route.application.services;
 import com.workshop.route.domain.model.agregates.Route;
 import com.workshop.route.domain.model.mapper.RouteMapper;
 import com.workshop.route.domain.repository.RouteRepository;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RouteServiceImpl implements RouteService {
 
     private final RouteRepository routeRepository;
+    private final Validator validator;
 
-    public RouteServiceImpl(RouteRepository routeRepository) {
+    public RouteServiceImpl(RouteRepository routeRepository, Validator validator) {
         this.routeRepository = routeRepository;
+        this.validator = validator;
+    }
+
+    private void validateRoute(Route route) {
+        Set<ConstraintViolation<Route>> violations = validator.validate(route);
+        if (!violations.isEmpty()) {
+            String errorMessages = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", "));
+            System.out.println("Validation Errors: " + errorMessages); // Add this line for debugging
+            throw new IllegalArgumentException("Errores de validación: " + errorMessages);
+        }
     }
 
     @Override
     public Mono<Route> createRoute(Route route) {
+        validateRoute(route);
         return routeRepository.save(route);
     }
 
@@ -29,8 +49,11 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Mono<Route> updateRoute(String id, Route route) {
         return routeRepository.findById(id)
-                .doOnNext(existingRoute -> RouteMapper.mapRouteData(route, existingRoute))
-                .flatMap(routeRepository::save);
+                .flatMap(existingRoute -> {
+                    RouteMapper.mapRouteData(route, existingRoute);
+                    validateRoute(existingRoute);
+                    return routeRepository.save(existingRoute);
+                });
     }
 
     @Override

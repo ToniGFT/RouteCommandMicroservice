@@ -1,7 +1,7 @@
 package com.workshop.route.domain.model.agregates;
-
 import com.workshop.route.domain.model.entities.Schedule;
 import com.workshop.route.domain.model.entities.Stop;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -20,9 +22,17 @@ public class Route {
 
     @Id
     private String routeId;
+
+    @NotEmpty(message = "El nombre de la ruta no puede estar vacío")
     private String routeName;
-    private List<Stop> stops;
+
+    @NotEmpty(message = "Debe haber al menos una parada en la ruta")
+    private List<@Valid Stop> stops;
+
+    @NotNull(message = "El horario no puede ser nulo")
+    @Valid
     private Schedule schedule;
 
 }
+
 
