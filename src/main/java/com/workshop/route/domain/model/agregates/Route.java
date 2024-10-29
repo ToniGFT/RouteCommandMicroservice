@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,11 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "routes")
+@Document(collection = "Route")
 public class Route {
 
     @Id
-    private String routeId;
+    private ObjectId routeId;
 
     @NotEmpty(message = "El nombre de la ruta no puede estar vacío")
     private String routeName;

@@ -4,6 +4,7 @@ import com.workshop.route.domain.model.agregates.Route;
 import com.workshop.route.domain.model.mapper.RouteMapper;
 import com.workshop.route.domain.repository.RouteRepository;
 import jakarta.validation.ValidationException;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,12 +42,12 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Mono<Route> getRouteById(String id) {
+    public Mono<Route> getRouteById(ObjectId  id) {
         return routeRepository.findById(id);
     }
 
     @Override
-    public Mono<Route> updateRoute(String id, Route route) {
+    public Mono<Route> updateRoute(ObjectId id, Route route) {
         return routeRepository.findById(id)
                 .flatMap(existingRoute -> {
                     RouteMapper.mapRouteData(route, existingRoute);
@@ -56,7 +57,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Mono<Void> deleteRoute(String id) {
+    public Mono<Void> deleteRoute(ObjectId  id) {
         return routeRepository.deleteById(id);
     }
 
