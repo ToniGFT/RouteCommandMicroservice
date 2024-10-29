@@ -30,7 +30,6 @@ public class RouteServiceImpl implements RouteService {
             String errorMessages = violations.stream()
                     .map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", "));
-            System.out.println("Validation Errors: " + errorMessages); // Add this line for debugging
             throw new IllegalArgumentException("Errores de validación: " + errorMessages);
         }
     }

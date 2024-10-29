@@ -97,7 +97,6 @@ class RouteServiceImplTest {
         invalidRoute = Route.builder().build();
     }
 
-
     @Test
     @DisplayName("Test createRoute - Successful Creation")
     void createRoute_Success() {
