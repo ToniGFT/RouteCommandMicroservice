@@ -31,7 +31,7 @@ public class RouteController {
                 .doOnSuccess(response -> logger.info("Successfully created route with ID: {}", route.getRouteId()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{_id}")
     public Mono<ResponseEntity<Route>> getRouteById(@PathVariable String id) {
         logger.info("Fetching route with ID: {}", id);
         return routeService.getRouteById(id)
@@ -40,7 +40,7 @@ public class RouteController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{_id}")
     public Mono<ResponseEntity<Route>> updateRoute(@PathVariable String id, @RequestBody Route route) {
         logger.info("Attempting to update route with ID: {}", id);
         return routeService.updateRoute(id, route)
@@ -49,7 +49,7 @@ public class RouteController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{_id}")
     public Mono<ResponseEntity<Void>> deleteRoute(@PathVariable String id) {
         logger.info("Attempting to delete route with ID: {}", id);
         return routeService.deleteRoute(id)
