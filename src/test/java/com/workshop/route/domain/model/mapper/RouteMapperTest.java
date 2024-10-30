@@ -1,6 +1,7 @@
 package com.workshop.route.domain.model.mapper;
 
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +14,16 @@ class RouteMapperTest {
     @DisplayName("Map Route Data - Should Copy Data from Source to Destination Without Changing routeId")
     void mapRouteData_shouldCopyDataFromSourceToDestinationWithoutChangingRouteId() {
         // Arrange
+        ObjectId sourceId = new ObjectId("507f1f77bcf86cd799439011");
+        ObjectId destinationId = new ObjectId("507f191e810c19729de860ea");
+
         Route source = Route.builder()
-                .routeId("1")
+                .routeId(sourceId)
                 .routeName("Source Route")
                 .build();
 
         Route destination = Route.builder()
-                .routeId("2")
+                .routeId(destinationId)
                 .routeName("Destination Route")
                 .build();
 
@@ -27,7 +31,7 @@ class RouteMapperTest {
         RouteMapper.mapRouteData(source, destination);
 
         // Assert
-        assertThat(destination.getRouteId()).isEqualTo("2"); // Verificar que routeId no cambia
-        assertThat(destination.getRouteName()).isEqualTo("Source Route"); // Verificar que routeName se copia
+        assertThat(destination.getRouteId()).isEqualTo(destinationId);
+        assertThat(destination.getRouteName()).isEqualTo("Source Route");
     }
 }

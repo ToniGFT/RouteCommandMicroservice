@@ -1,7 +1,7 @@
 package com.workshop.route.application.response.service;
 
-
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,14 @@ class RouteResponseServiceTest {
     private RouteResponseService routeResponseService;
 
     private Route route;
+    private ObjectId objectId;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        objectId = new ObjectId("507f1f77bcf86cd799439011");
         route = Route.builder()
-                .routeId("1")
+                .routeId(objectId)
                 .routeName("Test Route")
                 .build();
     }
@@ -41,7 +43,7 @@ class RouteResponseServiceTest {
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode() == HttpStatus.CREATED &&
                         response.getBody() != null &&
-                        response.getBody().getRouteId().equals("1"))
+                        response.getBody().getRouteId().equals(objectId))
                 .verifyComplete();
     }
 
@@ -56,7 +58,7 @@ class RouteResponseServiceTest {
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode() == HttpStatus.OK &&
                         response.getBody() != null &&
-                        response.getBody().getRouteId().equals("1"))
+                        response.getBody().getRouteId().equals(objectId))
                 .verifyComplete();
     }
 
@@ -87,8 +89,7 @@ class RouteResponseServiceTest {
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode() == HttpStatus.OK &&
                         response.getBody() != null &&
-                        response.getBody().getRouteId().equals("1"))
+                        response.getBody().getRouteId().equals(objectId))
                 .verifyComplete();
     }
 }
-

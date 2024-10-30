@@ -1,4 +1,4 @@
-package com.workshop.route.domain.model.agregates;
+package com.workshop.route.domain.model.aggregates;
 import com.workshop.route.domain.model.entities.Schedule;
 import com.workshop.route.domain.model.entities.Stop;
 import jakarta.validation.Valid;

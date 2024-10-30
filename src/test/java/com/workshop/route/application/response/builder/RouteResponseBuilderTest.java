@@ -1,6 +1,7 @@
 package com.workshop.route.application.response.builder;
 
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,9 @@ class RouteResponseBuilderTest {
     @DisplayName("Generate Created Response - Should Return 201 Created with Route")
     void generateCreatedResponse_shouldReturnCreatedResponse() {
         // given
+        ObjectId objectId = new ObjectId("507f1f77bcf86cd799439011");
         Route route = Route.builder()
-                .routeId("1")
+                .routeId(objectId)
                 .routeName("Test Route")
                 .build();
 
@@ -26,7 +28,7 @@ class RouteResponseBuilderTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getRouteId()).isEqualTo("1");
+        assertThat(response.getBody().getRouteId()).isEqualTo(objectId);
         assertThat(response.getBody().getRouteName()).isEqualTo("Test Route");
     }
 
@@ -34,8 +36,9 @@ class RouteResponseBuilderTest {
     @DisplayName("Generate OK Response - Should Return 200 OK with Route")
     void generateOkResponse_shouldReturnOkResponse() {
         // given
+        ObjectId objectId = new ObjectId("507f1f77bcf86cd799439011");
         Route route = Route.builder()
-                .routeId("1")
+                .routeId(objectId)
                 .routeName("Test Route")
                 .build();
 
@@ -45,7 +48,7 @@ class RouteResponseBuilderTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getRouteId()).isEqualTo("1");
+        assertThat(response.getBody().getRouteId()).isEqualTo(objectId);
         assertThat(response.getBody().getRouteName()).isEqualTo("Test Route");
     }
 
@@ -60,4 +63,3 @@ class RouteResponseBuilderTest {
         assertThat(response.getBody()).isNull();
     }
 }
-

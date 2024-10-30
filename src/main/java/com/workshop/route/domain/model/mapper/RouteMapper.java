@@ -1,6 +1,6 @@
 package com.workshop.route.domain.model.mapper;
 
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
 import com.workshop.route.domain.model.mapper.configuration.ModelMapperConfig;
 import org.modelmapper.ModelMapper;
 

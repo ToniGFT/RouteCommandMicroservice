@@ -1,6 +1,6 @@
 package com.workshop.route.domain.model.mapper.configuration;
 
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration.AccessLevel;
 

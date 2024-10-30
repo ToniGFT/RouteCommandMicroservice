@@ -1,7 +1,7 @@
 package com.workshop.route.application.response.service;
 
 import com.workshop.route.application.response.builder.RouteResponseBuilder;
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

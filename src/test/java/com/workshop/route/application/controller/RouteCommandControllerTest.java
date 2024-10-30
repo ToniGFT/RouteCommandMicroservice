@@ -1,8 +1,9 @@
 package com.workshop.route.application.controller;
 
 import com.workshop.route.application.response.service.RouteResponseService;
-import com.workshop.route.application.services.RouteService;
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.application.services.RouteCommandService;
+import com.workshop.route.domain.model.aggregates.Route;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -18,25 +18,27 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@DisplayName("RouteController Unit Tests")
-class RouteControllerTest {
+@DisplayName("RouteCommandController Unit Tests")
+class RouteCommandControllerTest {
 
     @Mock
-    private RouteService routeService;
+    private RouteCommandService routeCommandService;
 
     @Mock
     private RouteResponseService routeResponseService;
 
     @InjectMocks
-    private RouteController routeController;
+    private RouteCommandController routeCommandController;
 
     private Route route;
+    private ObjectId objectId;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        objectId = new ObjectId("507f1f77bcf86cd799439011");
         route = Route.builder()
-                .routeId("1")
+                .routeId(objectId)
                 .routeName("Test Route")
                 .build();
     }
@@ -45,12 +47,12 @@ class RouteControllerTest {
     @DisplayName("Create Route - Should Return Created Response")
     void createRoute_shouldReturnCreatedResponse() {
         // given
-        when(routeService.createRoute(any(Route.class))).thenReturn(Mono.just(route));
+        when(routeCommandService.createRoute(any(Route.class))).thenReturn(Mono.just(route));
         when(routeResponseService.buildCreatedResponse(route))
                 .thenReturn(Mono.just(ResponseEntity.status(201).body(route)));
 
         // when
-        Mono<ResponseEntity<Route>> result = routeController.createRoute(route);
+        Mono<ResponseEntity<Route>> result = routeCommandController.createRoute(route);
 
         // then
         StepVerifier.create(result)
@@ -59,36 +61,19 @@ class RouteControllerTest {
     }
 
     @Test
-    @DisplayName("Get Route By ID - Should Return OK Response")
-    void getRouteById_shouldReturnOkResponse() {
-        // given
-        when(routeService.getRouteById("1")).thenReturn(Mono.just(route));
-        when(routeResponseService.buildOkResponse(route))
-                .thenReturn(Mono.just(ResponseEntity.ok(route)));
-
-        // when
-        Mono<ResponseEntity<Route>> result = routeController.getRouteById("1");
-
-        // then
-        StepVerifier.create(result)
-                .expectNextMatches(response -> response.getBody() != null && response.getBody().getRouteId().equals("1"))
-                .verifyComplete();
-    }
-
-    @Test
     @DisplayName("Update Route - Should Return OK Response")
     void updateRoute_shouldReturnOkResponse() {
         // given
-        when(routeService.updateRoute(eq("1"), any(Route.class))).thenReturn(Mono.just(route));
+        when(routeCommandService.updateRoute(eq(objectId), any(Route.class))).thenReturn(Mono.just(route));
         when(routeResponseService.buildOkResponse(route))
                 .thenReturn(Mono.just(ResponseEntity.ok(route)));
 
         // when
-        Mono<ResponseEntity<Route>> result = routeController.updateRoute("1", route);
+        Mono<ResponseEntity<Route>> result = routeCommandController.updateRoute(objectId, route);
 
         // then
         StepVerifier.create(result)
-                .expectNextMatches(response -> response.getBody() != null && response.getBody().getRouteId().equals("1"))
+                .expectNextMatches(response -> response.getBody() != null && response.getBody().getRouteId().equals(objectId))
                 .verifyComplete();
     }
 
@@ -96,33 +81,16 @@ class RouteControllerTest {
     @DisplayName("Delete Route - Should Return No Content Response")
     void deleteRoute_shouldReturnNoContentResponse() {
         // given
-        when(routeService.deleteRoute("1")).thenReturn(Mono.empty());
+        when(routeCommandService.deleteRoute(objectId)).thenReturn(Mono.empty());
         when(routeResponseService.buildNoContentResponse())
                 .thenReturn(Mono.just(ResponseEntity.noContent().build()));
 
         // when
-        Mono<ResponseEntity<Void>> result = routeController.deleteRoute("1");
+        Mono<ResponseEntity<Void>> result = routeCommandController.deleteRoute(objectId);
 
         // then
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode().is2xxSuccessful())
-                .verifyComplete();
-    }
-
-    @Test
-    @DisplayName("Get All Routes - Should Return OK Response for Each Route")
-    void getAllRoutes_shouldReturnOkResponse() {
-        // given
-        when(routeService.getAllRoutes()).thenReturn(Flux.just(route));
-        when(routeResponseService.buildRoutesResponse(any(Flux.class)))
-                .thenReturn(Flux.just(ResponseEntity.ok(route)));
-
-        // when
-        Flux<ResponseEntity<Route>> result = routeController.getAllRoutes();
-
-        // then
-        StepVerifier.create(result)
-                .expectNextMatches(response -> response.getBody() != null && response.getBody().getRouteId().equals("1"))
                 .verifyComplete();
     }
 }

@@ -1,6 +1,6 @@
 package com.workshop.route.application.response.builder;
 
-import com.workshop.route.domain.model.agregates.Route;
+import com.workshop.route.domain.model.aggregates.Route;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
