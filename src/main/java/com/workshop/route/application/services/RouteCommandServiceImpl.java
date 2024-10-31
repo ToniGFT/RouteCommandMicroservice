@@ -1,5 +1,8 @@
 package com.workshop.route.application.services;
 
+import com.workshop.route.domain.exception.RouteNotFoundException;
+import com.workshop.route.domain.exception.RouteUpdateException;
+import com.workshop.route.domain.exception.RouteValidationException;
 import com.workshop.route.domain.model.aggregates.Route;
 import com.workshop.route.domain.model.update.RouteUpdater;
 import com.workshop.route.domain.model.validation.RouteValidator;
@@ -23,19 +26,25 @@ public class RouteCommandServiceImpl implements RouteCommandService {
 
     @Override
     public Mono<Route> createRoute(Route route) {
-        routeValidator.validate(route);
-        return routeRepository.save(route);
+        return Mono.just(route)
+                .doOnNext(routeValidator::validate)
+                .onErrorMap(e -> new RouteValidationException("Invalid route data: " + e.getMessage()))
+                .flatMap(routeRepository::save);
     }
 
     @Override
     public Mono<Route> updateRoute(ObjectId id, Route route) {
         return routeRepository.findById(id)
-                .flatMap(existingRoute -> routeUpdater.mapAndValidate(route, existingRoute))
+                .switchIfEmpty(Mono.error(new RouteNotFoundException("Route not found with id: " + id)))
+                .flatMap(existingRoute -> routeUpdater.mapAndValidate(route, existingRoute)
+                        .onErrorMap(e -> new RouteUpdateException("Failed to update route: " + e.getMessage())))
                 .flatMap(routeRepository::save);
     }
 
     @Override
     public Mono<Void> deleteRoute(ObjectId id) {
-        return routeRepository.deleteById(id);
+        return routeRepository.findById(id)
+                .switchIfEmpty(Mono.error(new RouteNotFoundException("Route not found with id: " + id)))
+                .flatMap(existingRoute -> routeRepository.deleteById(id));
     }
 }

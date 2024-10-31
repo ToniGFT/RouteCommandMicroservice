@@ -2,14 +2,14 @@ package com.workshop.route.domain.model.entities;
 
 import com.workshop.route.domain.model.valueobjects.Coordinates;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,19 +17,17 @@ import jakarta.validation.constraints.NotNull;
 @Builder
 public class Stop {
 
-    @NotEmpty(message = "El ID de la parada no puede estar vacío")
+    @NotEmpty(message = "Stop ID cannot be empty")
     private String stopId;
 
-    @NotEmpty(message = "El nombre de la parada no puede estar vacío")
+    @NotEmpty(message = "Stop name cannot be empty")
     private String stopName;
 
-    @NotNull(message = "Las coordenadas no pueden ser nulas")
+    @NotNull(message = "Coordinates cannot be null")
     @Valid
     private Coordinates coordinates;
 
-    @NotNull(message = "Debe haber al menos un horario de llegada")
-    @NotEmpty(message = "La lista de horarios de llegada no puede estar vacía")
+    @NotNull(message = "There must be at least one arrival time")
+    @NotEmpty(message = "Arrival times list cannot be empty")
     private List<String> arrivalTimes;
-
 }
-

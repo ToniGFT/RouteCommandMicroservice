@@ -1,5 +1,8 @@
 package com.workshop.route.application.services;
 
+import com.workshop.route.domain.exception.RouteNotFoundException;
+import com.workshop.route.domain.exception.RouteUpdateException;
+import com.workshop.route.domain.exception.RouteValidationException;
 import com.workshop.route.domain.model.aggregates.Route;
 import com.workshop.route.domain.model.entities.Schedule;
 import com.workshop.route.domain.model.entities.Stop;
@@ -108,14 +111,15 @@ class RouteCommandServiceImplTest {
         doThrow(new IllegalArgumentException("Validation error")).when(routeValidator).validate(invalidRoute);
 
         // Act & Assert
-        StepVerifier.create(Mono.fromCallable(() -> routeService.createRoute(invalidRoute)))
-                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
-                        throwable.getMessage().equals("Validation error"))
+        StepVerifier.create(routeService.createRoute(invalidRoute))
+                .expectErrorMatches(throwable -> throwable instanceof RouteValidationException &&
+                        throwable.getMessage().contains("Invalid route data"))
                 .verify();
 
         verify(routeValidator, times(1)).validate(invalidRoute);
         verify(routeCommandRepository, never()).save(any());
     }
+
 
     @Test
     @DisplayName("Test updateRoute - Successful Update")
@@ -134,6 +138,7 @@ class RouteCommandServiceImplTest {
         verify(routeCommandRepository, times(1)).save(route);
     }
 
+
     @Test
     @DisplayName("Test updateRoute - Route Not Found")
     void updateRoute_NotFound() {
@@ -142,21 +147,95 @@ class RouteCommandServiceImplTest {
 
         // Act & Assert
         StepVerifier.create(routeService.updateRoute(objectId, route))
-                .verifyComplete();
+                .expectErrorMatches(throwable -> throwable instanceof RouteNotFoundException &&
+                        throwable.getMessage().contains("Route not found with id: " + objectId))
+                .verify();
 
+        verify(routeCommandRepository, times(1)).findById(objectId);
         verify(routeCommandRepository, never()).save(any());
     }
+
 
     @Test
     @DisplayName("Test deleteRoute - Successful Deletion")
     void deleteRoute_Success() {
         // Arrange
+        when(routeCommandRepository.findById(route.getRouteId())).thenReturn(Mono.just(route)); // Mock de findById
         when(routeCommandRepository.deleteById(route.getRouteId())).thenReturn(Mono.empty());
 
         // Act & Assert
         StepVerifier.create(routeService.deleteRoute(route.getRouteId()))
                 .verifyComplete();
 
+        verify(routeCommandRepository, times(1)).findById(route.getRouteId());
         verify(routeCommandRepository, times(1)).deleteById(route.getRouteId());
     }
+
+
+    @Test
+    @DisplayName("Test createRoute - RouteValidationException")
+    void createRoute_ValidationException() {
+        // Arrange
+        doThrow(new IllegalArgumentException("Validation error")).when(routeValidator).validate(invalidRoute);
+
+        // Act & Assert
+        StepVerifier.create(routeService.createRoute(invalidRoute))
+                .expectErrorMatches(throwable -> throwable instanceof RouteValidationException &&
+                        throwable.getMessage().contains("Invalid route data"))
+                .verify();
+
+        verify(routeValidator, times(1)).validate(invalidRoute);
+        verify(routeCommandRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test updateRoute - RouteNotFoundException")
+    void updateRoute_RouteNotFoundException() {
+        // Arrange
+        when(routeCommandRepository.findById(objectId)).thenReturn(Mono.empty());
+
+        // Act & Assert
+        StepVerifier.create(routeService.updateRoute(objectId, route))
+                .expectErrorMatches(throwable -> throwable instanceof RouteNotFoundException &&
+                        throwable.getMessage().contains("Route not found with id: " + objectId))
+                .verify();
+
+        verify(routeCommandRepository, times(1)).findById(objectId);
+        verify(routeUpdater, never()).mapAndValidate(any(), any());
+        verify(routeCommandRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test updateRoute - RouteUpdateException")
+    void updateRoute_UpdateException() {
+        // Arrange
+        when(routeCommandRepository.findById(objectId)).thenReturn(Mono.just(route));
+        when(routeUpdater.mapAndValidate(route, route)).thenReturn(Mono.error(new IllegalArgumentException("Update validation error")));
+
+        // Act & Assert
+        StepVerifier.create(routeService.updateRoute(objectId, route))
+                .expectErrorMatches(throwable -> throwable instanceof RouteUpdateException &&
+                        throwable.getMessage().contains("Failed to update route"))
+                .verify();
+
+        verify(routeUpdater, times(1)).mapAndValidate(route, route);
+        verify(routeCommandRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test deleteRoute - RouteNotFoundException")
+    void deleteRoute_RouteNotFoundException() {
+        // Arrange
+        when(routeCommandRepository.findById(objectId)).thenReturn(Mono.empty());
+
+        // Act & Assert
+        StepVerifier.create(routeService.deleteRoute(objectId))
+                .expectErrorMatches(throwable -> throwable instanceof RouteNotFoundException &&
+                        throwable.getMessage().contains("Route not found with id: " + objectId))
+                .verify();
+
+        verify(routeCommandRepository, times(1)).findById(objectId);
+        verify(routeCommandRepository, never()).deleteById(eq(objectId));
+    }
+
 }

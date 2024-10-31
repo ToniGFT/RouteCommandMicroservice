@@ -1,30 +1,30 @@
 package com.workshop.route.domain.model.valueobjects;
 
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.AssertTrue;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class WeekSchedule {
 
-    @NotNull(message = "La hora de inicio no puede ser nula")
+    @NotNull(message = "Start time cannot be null")
     private LocalTime startTime;
 
-    @NotNull(message = "La hora de finalización no puede ser nula")
+    @NotNull(message = "End time cannot be null")
     private LocalTime endTime;
 
-    @NotNull(message = "La frecuencia de minutos no puede ser nula")
-    @Positive(message = "La frecuencia debe ser un número positivo")
+    @NotNull(message = "Frequency in minutes cannot be null")
+    @Positive(message = "Frequency must be a positive number")
     private Integer frequencyMinutes;
 
-    @AssertTrue(message = "La hora de finalización debe ser después de la hora de inicio")
+    @AssertTrue(message = "End time must be after start time")
     public boolean isEndTimeAfterStartTime() {
         return endTime == null || startTime == null || endTime.isAfter(startTime);
     }
