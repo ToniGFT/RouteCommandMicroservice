@@ -36,7 +36,7 @@ public class RouteCommandServiceImpl implements RouteCommandService {
     public Mono<Route> updateRoute(ObjectId id, Route route) {
         return routeRepository.findById(id)
                 .switchIfEmpty(Mono.error(new RouteNotFoundException("Route not found with id: " + id)))
-                .flatMap(existingRoute -> routeUpdater.mapAndValidate(existingRoute, route)
+                .flatMap(existingRoute -> routeUpdater.mapAndValidate(route, existingRoute)
                         .onErrorMap(e -> new RouteUpdateException("Failed to update route: " + e.getMessage())))
                 .flatMap(routeRepository::save);
     }

@@ -32,6 +32,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,7 +57,7 @@ public class ControllerIntegrationTest {
     void setup() {
 
          route1 = new Route(
-                new ObjectId(),
+                new ObjectId("67287ffc9faf680ded8d2ef8"),
                 "Route 1",
                 List.of(new Stop(
                         "1",
@@ -91,10 +92,8 @@ public class ControllerIntegrationTest {
     @Test
     void testUpdateRoute() {
 
-        ObjectId routeId = new ObjectId("67287ffc9faf680ded8d2ef8");  // Usar un ID fijo para mantener consistencia en la prueba
-
         Route route1 = new Route(
-                routeId,
+                new ObjectId("67287ffc9faf680ded8d2ef8"),
                 "Route 1",
                 List.of(new Stop(
                         "1",
@@ -109,7 +108,7 @@ public class ControllerIntegrationTest {
         );
 
         Route route2 = new Route(
-                routeId,
+                new ObjectId("67287ffc9faf680ded8d2ef8"),
                 "Route 2",
                 List.of(new Stop(
                         "2",
@@ -123,20 +122,19 @@ public class ControllerIntegrationTest {
                 )
         );
 
-        when(routeRepository.findById(routeId)).thenReturn(Mono.just(route1));
+        when(routeRepository.save(any(Route.class))).thenReturn(Mono.just(route1));
+        when(routeRepository.findById(route1.getRouteId())).thenReturn(Mono.just(route1));
         when(routeUpdater.mapAndValidate(any(Route.class), any(Route.class))).thenReturn(Mono.just(route2));
-        when(routeRepository.save(any(Route.class))).thenReturn(Mono.just(route2));
         when(routeResponseService.buildOkResponse(any())).thenReturn(Mono.just(ResponseEntity.ok(route2)));
 
         webTestClient.put()
-                .uri("/routes/{id}", routeId.toHexString())
+                .uri("/routes/{idString}", route1.getRouteId().toHexString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(route2)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Route.class)
-                .value(responseRoute -> assertEquals(route2.getRouteId().toHexString(), responseRoute.getRouteId().toHexString(),
-                        "El routeId no coincide en la respuesta"));
+                .isEqualTo(route2);
     }
 
 
@@ -150,7 +148,7 @@ public class ControllerIntegrationTest {
         when(routeResponseService.buildNoContentResponse()).thenReturn(Mono.just(ResponseEntity.noContent().build()));
 
         webTestClient.delete()
-                .uri("/routes/{id}", routeId.toHexString())
+                .uri("/routes/{idString}", routeId.toHexString())
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody().isEmpty();

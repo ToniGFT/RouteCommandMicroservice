@@ -17,9 +17,7 @@ public class RouteUpdater {
 
     public Mono<Route> mapAndValidate(Route source, Route target) {
         RouteMapper.mapRouteData(source, target);
-        return Mono.defer(() -> {
-            routeValidator.validate(target);
-            return Mono.just(target);
-        });
+        return Mono.fromRunnable(() -> routeValidator.validate(target))
+                .thenReturn(target);
     }
 }
