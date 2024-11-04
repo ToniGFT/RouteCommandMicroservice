@@ -31,18 +31,20 @@ public class RouteCommandController {
                 .doOnSuccess(response -> logger.info("Successfully created route with ID: {}", route.getRouteId()));
     }
 
-    @PutMapping("/{id}")
-    public Mono<ResponseEntity<Route>> updateRoute(@PathVariable ObjectId id, @RequestBody Route route) {
-        logger.info("Attempting to update route with ID: {}", id);
+    @PutMapping("/{idString}")
+    public Mono<ResponseEntity<Route>> updateRoute(@PathVariable String idString, @RequestBody Route route) {
+        logger.info("Attempting to update route with ID: {}", idString);
+        ObjectId id = new ObjectId(idString);
         return routeCommandService.updateRoute(id, route)
                 .flatMap(routeResponseService::buildOkResponse)
                 .doOnSuccess(response -> logger.info("Successfully updated route with ID: {}", id))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> deleteRoute(@PathVariable ObjectId id) {
-        logger.info("Attempting to delete route with ID: {}", id);
+    @DeleteMapping("/{idString}")
+    public Mono<ResponseEntity<Void>> deleteRoute(@PathVariable String idString) {
+        logger.info("Attempting to delete route with ID: {}", idString);
+        ObjectId id = new ObjectId(idString);
         return routeCommandService.deleteRoute(id)
                 .then(routeResponseService.buildNoContentResponse())
                 .doOnSuccess(response -> logger.info("Successfully deleted route with ID: {}", id));

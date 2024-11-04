@@ -32,11 +32,13 @@ class RouteCommandControllerTest {
 
     private Route route;
     private ObjectId objectId;
+    private String stringId;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         objectId = new ObjectId("507f1f77bcf86cd799439011");
+        stringId = "507f1f77bcf86cd799439011";
         route = Route.builder()
                 .routeId(objectId)
                 .routeName("Test Route")
@@ -69,7 +71,7 @@ class RouteCommandControllerTest {
                 .thenReturn(Mono.just(ResponseEntity.ok(route)));
 
         // when
-        Mono<ResponseEntity<Route>> result = routeCommandController.updateRoute(objectId, route);
+        Mono<ResponseEntity<Route>> result = routeCommandController.updateRoute(stringId, route);
 
         // then
         StepVerifier.create(result)
@@ -86,7 +88,7 @@ class RouteCommandControllerTest {
                 .thenReturn(Mono.just(ResponseEntity.noContent().build()));
 
         // when
-        Mono<ResponseEntity<Void>> result = routeCommandController.deleteRoute(objectId);
+        Mono<ResponseEntity<Void>> result = routeCommandController.deleteRoute(stringId);
 
         // then
         StepVerifier.create(result)
