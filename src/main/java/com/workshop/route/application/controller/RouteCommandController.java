@@ -1,5 +1,6 @@
 package com.workshop.route.application.controller;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.application.response.service.RouteResponseService;
 import com.workshop.route.application.services.RouteCommandService;
 import com.workshop.route.domain.model.aggregates.Route;
@@ -32,10 +33,10 @@ public class RouteCommandController {
     }
 
     @PutMapping("/{idString}")
-    public Mono<ResponseEntity<Route>> updateRoute(@PathVariable String idString, @RequestBody Route route) {
+    public Mono<ResponseEntity<Route>> updateRoute(@PathVariable String idString, @RequestBody RouteUpdateDTO routeUpdateInfo) {
         logger.info("Attempting to update route with ID: {}", idString);
         ObjectId id = new ObjectId(idString);
-        return routeCommandService.updateRoute(id, route)
+        return routeCommandService.updateRoute(id, routeUpdateInfo)
                 .flatMap(routeResponseService::buildOkResponse)
                 .doOnSuccess(response -> logger.info("Successfully updated route with ID: {}", id))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
