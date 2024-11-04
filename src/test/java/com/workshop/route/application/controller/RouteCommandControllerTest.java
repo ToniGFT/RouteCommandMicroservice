@@ -1,5 +1,6 @@
 package com.workshop.route.application.controller;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.application.response.service.RouteResponseService;
 import com.workshop.route.application.services.RouteCommandService;
 import com.workshop.route.domain.model.aggregates.Route;
@@ -33,6 +34,7 @@ class RouteCommandControllerTest {
     private Route route;
     private ObjectId objectId;
     private String stringId;
+    private RouteUpdateDTO routeUpdateInfo;
 
     @BeforeEach
     void setUp() {
@@ -41,6 +43,10 @@ class RouteCommandControllerTest {
         stringId = "507f1f77bcf86cd799439011";
         route = Route.builder()
                 .routeId(objectId)
+                .routeName("Test Route")
+                .build();
+
+        routeUpdateInfo = RouteUpdateDTO.builder()
                 .routeName("Test Route")
                 .build();
     }
@@ -66,12 +72,12 @@ class RouteCommandControllerTest {
     @DisplayName("Update Route - Should Return OK Response")
     void updateRoute_shouldReturnOkResponse() {
         // given
-        when(routeCommandService.updateRoute(eq(objectId), any(Route.class))).thenReturn(Mono.just(route));
+        when(routeCommandService.updateRoute(eq(objectId), any(RouteUpdateDTO.class))).thenReturn(Mono.just(route));
         when(routeResponseService.buildOkResponse(route))
                 .thenReturn(Mono.just(ResponseEntity.ok(route)));
 
         // when
-        Mono<ResponseEntity<Route>> result = routeCommandController.updateRoute(stringId, route);
+        Mono<ResponseEntity<Route>> result = routeCommandController.updateRoute(stringId, routeUpdateInfo);
 
         // then
         StepVerifier.create(result)

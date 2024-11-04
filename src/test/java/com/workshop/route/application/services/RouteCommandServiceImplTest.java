@@ -1,5 +1,6 @@
 package com.workshop.route.application.services;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.domain.exception.RouteNotFoundException;
 import com.workshop.route.domain.exception.RouteUpdateException;
 import com.workshop.route.domain.exception.RouteValidationException;
@@ -45,6 +46,7 @@ class RouteCommandServiceImplTest {
     private Route route2;
     private Route invalidRoute;
     private ObjectId objectId;
+    private RouteUpdateDTO routeUpdateInfo;
 
     @BeforeEach
     void setUp() {
@@ -81,6 +83,12 @@ class RouteCommandServiceImplTest {
 
         route = Route.builder()
                 .routeId(objectId)
+                .routeName("Ruta Centro-Norte")
+                .stops(List.of(stop1, stop2))
+                .schedule(schedule)
+                .build();
+
+        routeUpdateInfo = RouteUpdateDTO.builder()
                 .routeName("Ruta Centro-Norte")
                 .stops(List.of(stop1, stop2))
                 .schedule(schedule)
@@ -143,15 +151,15 @@ class RouteCommandServiceImplTest {
     void updateRoute_Success() {
         // Arrange
         when(routeCommandRepository.findById(route.getRouteId())).thenReturn(Mono.just(route));
-        when(routeUpdater.mapAndValidate(route, route)).thenReturn(Mono.just(route));
+        when(routeUpdater.mapAndValidate(routeUpdateInfo, route)).thenReturn(Mono.just(route));
         when(routeCommandRepository.save(route)).thenReturn(Mono.just(route));
 
         // Act & Assert
-        StepVerifier.create(routeService.updateRoute(route.getRouteId(), route))
+        StepVerifier.create(routeService.updateRoute(route.getRouteId(), routeUpdateInfo))
                 .expectNext(route)
                 .verifyComplete();
 
-        verify(routeUpdater, times(1)).mapAndValidate(route, route);
+        verify(routeUpdater, times(1)).mapAndValidate(routeUpdateInfo, route);
         verify(routeCommandRepository, times(1)).save(route);
     }
 
@@ -180,7 +188,7 @@ class RouteCommandServiceImplTest {
         when(routeCommandRepository.findById(objectId)).thenReturn(Mono.empty());
 
         // Act & Assert
-        StepVerifier.create(routeService.updateRoute(objectId, route))
+        StepVerifier.create(routeService.updateRoute(objectId, routeUpdateInfo))
                 .expectErrorMatches(throwable -> throwable instanceof RouteNotFoundException &&
                         throwable.getMessage().contains("Route not found with id: " + objectId))
                 .verify();
@@ -229,7 +237,7 @@ class RouteCommandServiceImplTest {
         when(routeCommandRepository.findById(objectId)).thenReturn(Mono.empty());
 
         // Act & Assert
-        StepVerifier.create(routeService.updateRoute(objectId, route))
+        StepVerifier.create(routeService.updateRoute(objectId, routeUpdateInfo))
                 .expectErrorMatches(throwable -> throwable instanceof RouteNotFoundException &&
                         throwable.getMessage().contains("Route not found with id: " + objectId))
                 .verify();
@@ -244,15 +252,15 @@ class RouteCommandServiceImplTest {
     void updateRoute_UpdateException() {
         // Arrange
         when(routeCommandRepository.findById(objectId)).thenReturn(Mono.just(route));
-        when(routeUpdater.mapAndValidate(route, route)).thenReturn(Mono.error(new IllegalArgumentException("Update validation error")));
+        when(routeUpdater.mapAndValidate(routeUpdateInfo, route)).thenReturn(Mono.error(new IllegalArgumentException("Update validation error")));
 
         // Act & Assert
-        StepVerifier.create(routeService.updateRoute(objectId, route))
+        StepVerifier.create(routeService.updateRoute(objectId, routeUpdateInfo))
                 .expectErrorMatches(throwable -> throwable instanceof RouteUpdateException &&
                         throwable.getMessage().contains("Failed to update route"))
                 .verify();
 
-        verify(routeUpdater, times(1)).mapAndValidate(route, route);
+        verify(routeUpdater, times(1)).mapAndValidate(routeUpdateInfo, route);
         verify(routeCommandRepository, never()).save(any());
     }
 
