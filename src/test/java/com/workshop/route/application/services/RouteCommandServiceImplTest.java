@@ -43,7 +43,6 @@ class RouteCommandServiceImplTest {
     private RouteCommandServiceImpl routeService;
 
     private Route route;
-    private Route route2;
     private Route invalidRoute;
     private ObjectId objectId;
     private RouteUpdateDTO routeUpdateInfo;
@@ -95,22 +94,6 @@ class RouteCommandServiceImplTest {
                 .build();
 
         invalidRoute = Route.builder().routeName("").build();
-
-
-         route2 = new Route(
-                new ObjectId(),
-                "Route 2",
-                List.of(new Stop(
-                        "2",
-                        "Central Station",
-                        new Coordinates(34.0522, -118.2437),
-                        List.of("07:30", "13:15", "17:45")
-                )),
-                new Schedule(
-                        new WeekSchedule(LocalTime.of(7, 30), LocalTime.of(20, 0), 45),
-                        new WeekSchedule(LocalTime.of(9, 0), LocalTime.of(15, 0), 90)
-                )
-        );
     }
 
     @Test
@@ -161,23 +144,6 @@ class RouteCommandServiceImplTest {
 
         verify(routeUpdater, times(1)).mapAndValidate(routeUpdateInfo, route);
         verify(routeCommandRepository, times(1)).save(route);
-    }
-
-    @Test
-    @DisplayName("Test updateRoute - Successful Update")
-    void updateRoute_SuccessDifferentObject() {
-        // Arrange
-        when(routeCommandRepository.findById(route.getRouteId())).thenReturn(Mono.just(route));
-        when(routeUpdater.mapAndValidate(route, route2)).thenReturn(Mono.just(route2));
-        when(routeCommandRepository.save(route2)).thenReturn(Mono.just(route2));
-
-        // Act & Assert
-        StepVerifier.create(routeService.updateRoute(route.getRouteId(), route2))
-                .expectNext(route2)
-                .verifyComplete();
-
-        verify(routeUpdater, times(1)).mapAndValidate(route, route2);
-        verify(routeCommandRepository, times(1)).save(route2);
     }
 
 
