@@ -22,7 +22,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Profile("dev")
-public class TestEndToEnd {
+public class EndToEndTest {
 
     @Autowired
     private WebTestClient webTestClient;
