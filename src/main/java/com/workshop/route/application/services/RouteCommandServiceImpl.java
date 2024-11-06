@@ -1,5 +1,6 @@
 package com.workshop.route.application.services;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.domain.exception.RouteNotFoundException;
 import com.workshop.route.domain.exception.RouteUpdateException;
 import com.workshop.route.domain.exception.RouteValidationException;
@@ -33,10 +34,10 @@ public class RouteCommandServiceImpl implements RouteCommandService {
     }
 
     @Override
-    public Mono<Route> updateRoute(ObjectId id, Route route) {
+    public Mono<Route> updateRoute(ObjectId id, RouteUpdateDTO routeUpdateInfo) {
         return routeRepository.findById(id)
                 .switchIfEmpty(Mono.error(new RouteNotFoundException("Route not found with id: " + id)))
-                .flatMap(existingRoute -> routeUpdater.mapAndValidate(route, existingRoute)
+                .flatMap(existingRoute -> routeUpdater.mapAndValidate(routeUpdateInfo, existingRoute)
                         .onErrorMap(e -> new RouteUpdateException("Failed to update route: " + e.getMessage())))
                 .flatMap(routeRepository::save);
     }

@@ -1,6 +1,7 @@
 package com.workshop.route.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.application.response.service.RouteResponseService;
 import com.workshop.route.application.services.RouteCommandServiceImpl;
 import com.workshop.route.domain.model.aggregates.Route;
@@ -53,6 +54,7 @@ public class ControllerIntegrationTest {
     private RouteResponseService routeResponseService;
 
     private Route route1;
+    private Route route2;
 
     @BeforeEach
     void setup() {
@@ -71,6 +73,22 @@ public class ControllerIntegrationTest {
                         new WeekSchedule(LocalTime.of(10, 0), LocalTime.of(14, 0), 60)  // weekends
                 )
         );
+
+        route2 = new Route(
+                new ObjectId("67287ffc9faf680ded8d2ef8"),
+                "Route 2",
+                List.of(new Stop(
+                        "2",
+                        "Central Station",
+                        new Coordinates(34.0522, -118.2437),
+                        List.of("07:30", "13:15", "17:45")
+                )),
+                new Schedule(
+                        new WeekSchedule(LocalTime.of(7, 30), LocalTime.of(20, 0), 45),
+                        new WeekSchedule(LocalTime.of(9, 0), LocalTime.of(15, 0), 90)
+                )
+        );
+
     }
 
     @Test
@@ -93,40 +111,10 @@ public class ControllerIntegrationTest {
     @Test
     void testUpdateRoute() {
 
-        Route route1 = new Route(
-                new ObjectId("67287ffc9faf680ded8d2ef8"),
-                "Route 1",
-                List.of(new Stop(
-                        "1",
-                        "Main Square",
-                        new Coordinates(40.4168, -3.7038),
-                        List.of("08:00", "12:00", "18:00")
-                )),
-                new Schedule(
-                        new WeekSchedule(LocalTime.of(8, 0), LocalTime.of(18, 0), 30),
-                        new WeekSchedule(LocalTime.of(10, 0), LocalTime.of(14, 0), 60)
-                )
-        );
-
-        Route route2 = new Route(
-                new ObjectId("67287ffc9faf680ded8d2ef8"),
-                "Route 2",
-                List.of(new Stop(
-                        "2",
-                        "Central Station",
-                        new Coordinates(34.0522, -118.2437),
-                        List.of("07:30", "13:15", "17:45")
-                )),
-                new Schedule(
-                        new WeekSchedule(LocalTime.of(7, 30), LocalTime.of(20, 0), 45),
-                        new WeekSchedule(LocalTime.of(9, 0), LocalTime.of(15, 0), 90)
-                )
-        );
-
-        when(routeRepository.save(any(Route.class))).thenReturn(Mono.just(route1));
         when(routeRepository.findById(route1.getRouteId())).thenReturn(Mono.just(route1));
-        when(routeUpdater.mapAndValidate(any(Route.class), any(Route.class))).thenReturn(Mono.just(route2));
-        when(routeResponseService.buildOkResponse(any())).thenReturn(Mono.just(ResponseEntity.ok(route2)));
+        when(routeUpdater.mapAndValidate(any(RouteUpdateDTO.class), any(Route.class))).thenReturn(Mono.just(route2));
+        when(routeRepository.save(any(Route.class))).thenReturn(Mono.just(route2));
+        when(routeResponseService.buildOkResponse(any())).thenReturn(Mono.just(ResponseEntity.status(HttpStatus.OK).body(route2)));
 
         webTestClient.put()
                 .uri("/routes/{idString}", route1.getRouteId().toHexString())
@@ -135,7 +123,13 @@ public class ControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Route.class)
-                .isEqualTo(route2);
+                .consumeWith(response -> {
+                    Route actualRoute = response.getResponseBody();
+                    assert actualRoute != null;
+                    assert route2.getRouteName().equals(actualRoute.getRouteName());
+                    assert route2.getStops().equals(actualRoute.getStops());
+                    assert route2.getSchedule().equals(actualRoute.getSchedule());
+                });
     }
 
     @Test

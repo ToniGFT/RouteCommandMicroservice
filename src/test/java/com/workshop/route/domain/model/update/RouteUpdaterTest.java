@@ -1,5 +1,6 @@
 package com.workshop.route.domain.model.update;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.domain.model.aggregates.Route;
 import com.workshop.route.domain.model.validation.RouteValidator;
 import org.bson.types.ObjectId;
@@ -23,7 +24,7 @@ class RouteUpdaterTest {
     @InjectMocks
     private RouteUpdater routeUpdater;
 
-    private Route source;
+    private RouteUpdateDTO source;
     private Route target;
 
     @BeforeEach
@@ -33,8 +34,7 @@ class RouteUpdaterTest {
         ObjectId sourceId = new ObjectId("507f1f77bcf86cd799439011");
         ObjectId targetId = new ObjectId("507f191e810c19729de860ea");
 
-        source = Route.builder()
-                .routeId(sourceId)
+        source = RouteUpdateDTO.builder()
                 .routeName("Source Route")
                 .build();
 

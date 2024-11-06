@@ -1,5 +1,6 @@
 package com.workshop.route.domain.model.mapper;
 
+import com.workshop.route.application.dto.RouteUpdateDTO;
 import com.workshop.route.domain.model.aggregates.Route;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +18,7 @@ class RouteMapperTest {
         ObjectId sourceId = new ObjectId("507f1f77bcf86cd799439011");
         ObjectId destinationId = new ObjectId("507f191e810c19729de860ea");
 
-        Route source = Route.builder()
-                .routeId(sourceId)
+        RouteUpdateDTO source = RouteUpdateDTO.builder()
                 .routeName("Source Route")
                 .build();
 
