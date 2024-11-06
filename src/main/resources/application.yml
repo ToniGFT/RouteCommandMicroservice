@@ -1,7 +1,5 @@
 spring:
     application:
         name: route
-    data:
-        mongodb:
-            uri: mongodb+srv://nabz:nabz@workshop.rh1jm.mongodb.net/Workshop?retryWrites=true&w=majority
-
+    profiles:
+        active: prod

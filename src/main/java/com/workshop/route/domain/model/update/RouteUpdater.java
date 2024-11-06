@@ -21,5 +21,4 @@ public class RouteUpdater {
         return Mono.fromRunnable(() -> routeValidator.validate(target))
                 .thenReturn(target);
     }
-
 }
