@@ -1,10 +1,10 @@
-package com.workshop.route;
+package com.workshop.passenger;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RouteApplicationTests {
+class PassengerApplicationTests {
 
 	@Test
 	void contextLoads() {
