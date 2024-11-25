@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteUpdater Unit Tests" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:12" hostname="GFT-9H3G1F3" time="0.012">
+  <properties/>
+  <testcase name="Map and Validate - Should Throw Validation Exception if Target is Invalid" classname="com.workshop.route.domain.model.update.RouteUpdaterTest" time="0.006"/>
+  <testcase name="Map and Validate - Should Copy Data from Source to Target and Validate Target" classname="com.workshop.route.domain.model.update.RouteUpdaterTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

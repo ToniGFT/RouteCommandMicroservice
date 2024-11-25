@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteCommandController Unit Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:08" hostname="GFT-9H3G1F3" time="2.549">
+  <properties/>
+  <testcase name="Update Route - Should Return OK Response" classname="com.workshop.route.application.controller.RouteCommandControllerTest" time="2.519"/>
+  <testcase name="Delete Route - Should Return No Content Response" classname="com.workshop.route.application.controller.RouteCommandControllerTest" time="0.015"/>
+  <testcase name="Create Route - Should Return Created Response" classname="com.workshop.route.application.controller.RouteCommandControllerTest" time="0.007"/>
+  <system-out><![CDATA[16:01:10.743 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Attempting to update route with ID: 507f1f77bcf86cd799439011
+16:01:10.984 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Successfully updated route with ID: 507f1f77bcf86cd799439011
+16:01:11.001 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Attempting to delete route with ID: 507f1f77bcf86cd799439011
+16:01:11.008 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Successfully deleted route with ID: 507f1f77bcf86cd799439011
+16:01:11.017 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Attempting to create a new route with name: Test Route
+16:01:11.018 [Test worker] INFO com.workshop.route.application.controller.RouteCommandController -- Successfully created route with ID: 507f1f77bcf86cd799439011
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\aipg\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.19\154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1\byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

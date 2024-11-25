@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteValidator Unit Tests" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:12" hostname="GFT-9H3G1F3" time="0.11">
+  <properties/>
+  <testcase name="Validate - Should Pass for Valid Route" classname="com.workshop.route.domain.model.validation.RouteValidatorTest" time="0.055"/>
+  <testcase name="Validate - Should Throw Exception for Invalid Route" classname="com.workshop.route.domain.model.validation.RouteValidatorTest" time="0.054"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

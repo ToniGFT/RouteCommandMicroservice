@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteResponseService Unit Tests" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:11" hostname="GFT-9H3G1F3" time="0.055">
+  <properties/>
+  <testcase name="Build No Content Response - Should Return Mono with 204 No Content" classname="com.workshop.route.application.response.service.RouteResponseServiceTest" time="0.011"/>
+  <testcase name="Build Routes Response - Should Return Flux with 200 OK for Each Route" classname="com.workshop.route.application.response.service.RouteResponseServiceTest" time="0.011"/>
+  <testcase name="Build OK Response - Should Return Mono with 200 OK" classname="com.workshop.route.application.response.service.RouteResponseServiceTest" time="0.01"/>
+  <testcase name="Build Created Response - Should Return Mono with 201 Created" classname="com.workshop.route.application.response.service.RouteResponseServiceTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

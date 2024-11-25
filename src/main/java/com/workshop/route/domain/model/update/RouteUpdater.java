@@ -17,8 +17,9 @@ public class RouteUpdater {
     }
 
     public Mono<Route> mapAndValidate(RouteUpdateDTO source, Route target) {
-        RouteMapper.mapRouteData(source, target);
-        return Mono.fromRunnable(() -> routeValidator.validate(target))
-                .thenReturn(target);
+        return Mono.fromRunnable(() -> {
+            RouteMapper.updateRouteFromDto(source, target);
+            routeValidator.validate(target);
+        }).thenReturn(target);
     }
 }

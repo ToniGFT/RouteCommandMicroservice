@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteCommandServiceImpl Unit Tests" tests="9" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:11" hostname="GFT-9H3G1F3" time="0.295">
+  <properties/>
+  <testcase name="Test updateRoute - RouteNotFoundException" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.211"/>
+  <testcase name="Test createRoute - Successful Creation" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.02"/>
+  <testcase name="Test createRoute - Validation Failure" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.022"/>
+  <testcase name="Test deleteRoute - RouteNotFoundException" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.005"/>
+  <testcase name="Test deleteRoute - Successful Deletion" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.005"/>
+  <testcase name="Test updateRoute - Successful Update" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.007"/>
+  <testcase name="Test updateRoute - RouteUpdateException" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.006"/>
+  <testcase name="Test updateRoute - Route Not Found" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.006"/>
+  <testcase name="Test createRoute - RouteValidationException" classname="com.workshop.route.application.services.RouteCommandServiceImplTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

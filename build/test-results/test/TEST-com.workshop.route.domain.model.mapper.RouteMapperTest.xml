@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="RouteMapper Unit Tests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-11T15:01:11" hostname="GFT-9H3G1F3" time="0.149">
+  <properties/>
+  <testcase name="Map Route Data - Should Copy Data from Source to Destination Without Changing routeId" classname="com.workshop.route.domain.model.mapper.RouteMapperTest" time="0.149"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
